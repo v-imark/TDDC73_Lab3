@@ -1,0 +1,17 @@
+query TrendingRepoQuery($query: String!) {
+    search(query: $query , type: REPOSITORY, first: 10) {
+        edges {
+            node {
+                ... on Repository {
+                    name
+                    owner {
+                        login
+                    }
+                    stargazerCount
+                    description
+                    url
+                }
+            }
+        }
+    }
+}
