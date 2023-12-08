@@ -2,6 +2,7 @@ package com.example.tddc73_lab3
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,18 +39,20 @@ import com.apollographql.apollo3.exception.ApolloException
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
+import androidx.navigation.NavController
 
 @Composable
-fun RepoCard(repo: TrendingRepoQuery.OnRepository?) {
+fun RepoCard(repo: TrendingRepoQuery.OnRepository?, viewModel: RepoViewModel) {
     //val configuration = LocalConfiguration.current
    // val screenHeight = configuration.screenHeightDp.dp
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.DarkGray,
+
     ),
         modifier = Modifier
             .fillMaxWidth()
             //.height(screenHeight / 5)
-            .padding(10.dp)
+            .padding(10.dp).clickable { viewModel.setRepo(repo) }
     )
     {
         Column {
@@ -106,7 +109,7 @@ fun StatBox(icon:Int, stat:Int=0, color: Color= Color.Black) {
 }
 
 @Composable
-fun RepoCardList() {
+fun RepoCardList(viewModel: RepoViewModel) {
     var name by remember { mutableStateOf("") }
     var repos by remember { mutableStateOf<List<TrendingRepoQuery.OnRepository?>?>(null) }
 
@@ -126,7 +129,7 @@ fun RepoCardList() {
 
     LazyColumn {
         items(repos ?: emptyList()) { repo ->
-            RepoCard(repo = repo )
+            RepoCard(repo = repo, viewModel)
         }
     }
     }
