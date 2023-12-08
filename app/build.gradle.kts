@@ -4,6 +4,9 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-beta.2"
 }
 
+val key = project.findProperty("api.token")
+
+
 android {
     namespace = "com.example.tddc73_lab3"
     compileSdk = 34
@@ -19,6 +22,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "GITHUB_TOKEN", "\"${key}\"")
     }
 
     buildTypes {
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -75,7 +80,7 @@ apollo {
         packageName.set("com.example.tddc73_lab3")
         introspection {
             endpointUrl.set("https://api.github.com/graphql")
-            headers.put("Authorization", "Bearer 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")
+            headers.put("Authorization", "\"${key}\"")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
         }
     }
