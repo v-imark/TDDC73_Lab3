@@ -9,6 +9,15 @@ query TrendingRepoQuery($query: String!) {
                     }
                     stargazerCount
                     description
+                    languages(first: 3) {
+                        edges {
+                            node {
+                                name
+                                color
+                            }
+                        }
+                        totalCount
+                    }
                     url
                 }
             }
