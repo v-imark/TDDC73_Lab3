@@ -10,6 +10,7 @@ query TrendingRepoQuery($query: String!) {
                     stargazerCount
                     description
                     url
+                    forkCount
                 }
             }
         }

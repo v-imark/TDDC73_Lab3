@@ -34,14 +34,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import apolloClient
+import com.apollographql.apollo3.exception.ApolloException
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 
 @Composable
-fun RepoCard(name: String) {
+fun RepoCard(repo: TrendingRepoQuery.OnRepository?) {
     //val configuration = LocalConfiguration.current
    // val screenHeight = configuration.screenHeightDp.dp
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        containerColor = Color.DarkGray,
     ),
         modifier = Modifier
             .fillMaxWidth()
@@ -50,46 +53,47 @@ fun RepoCard(name: String) {
     )
     {
         Column {
-        Text(text = name,
+        Text(text = repo?.name ?: " ",
             modifier = Modifier
                 .padding(start =16.dp, end= 16.dp, top=16.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 6.em,
+            color = Color.White,
             )
-        Text(text = "Name of the author",
+        Text(text = repo?.owner?.login ?: "",
             modifier = Modifier
                 .padding(start=16.dp, top=2.dp, bottom=16.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 3.5.em,
+            color = Color.White,
         )
-        Text(text = "This is the text that describes the repo, very informative. " +
-                "It contains all the relevant info. The content should probably be wrapped soon. " +
-                "This entire sentence will not be seen.",
+        Text(text = repo?.description ?: "Description was not found.",
             modifier = Modifier
                 .padding(start=16.dp, end=16.dp)
                 .heightIn(min=0.dp, max=75.dp),
             fontSize = 4.5.em,
+            color = Color.White,
         )
         Row (modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
             horizontalArrangement = Arrangement.End,)
             {
                 //Display forks
-                StatBox(icon = R.drawable.fork, stat = 6000)
+                StatBox(icon = R.drawable.fork, stat = repo?.forkCount ?: 0)
                 //Display stars
-                StatBox(icon = R.drawable.star, stat = 3000, Color.Gray)
+                StatBox(icon = R.drawable.star, stat = repo?.stargazerCount ?: 0, Color.Gray)
             }
         }
     }
 }
 
-
 @Composable
-fun StatBox(icon:Int, stat:Int=0, color: Color= Color.DarkGray) {
+fun StatBox(icon:Int, stat:Int=0, color: Color= Color.Black) {
+
     Box(
         modifier = Modifier
             .background(color = color)
-            .width(80.dp)
-            .height(30.dp),
+            .width(100.dp)
+            .height(35.dp),
         contentAlignment = Alignment.Center,
     ){
         Row (horizontalArrangement = Arrangement.SpaceEvenly){
@@ -104,13 +108,30 @@ fun StatBox(icon:Int, stat:Int=0, color: Color= Color.DarkGray) {
 @Composable
 fun RepoCardList() {
     var name by remember { mutableStateOf("") }
+    var repos by remember { mutableStateOf<List<TrendingRepoQuery.OnRepository?>?>(null) }
 
     LaunchedEffect(true) {
-        val response
-        = apolloClient.query(TrendingRepoQuery("language:python stars:>1000")).execute()
+        try {
+            val response = apolloClient.query(TrendingRepoQuery("language:python stars:>1000")).execute()
 
-        name = response.data?.search?.edges?.get(0)?.node?.onRepository?.name ?: ""
+            if (response.hasErrors()) {
+                // Handle errors if needed
+            } else {
+                repos = response.data?.search?.edges?.map { edge -> edge?.node?.onRepository  }
+            }
+        } catch (e: ApolloException) {
+            // Handle ApolloException if needed
+        }
     }
 
-    RepoCard(name = name)
-}
+    LazyColumn {
+        items(repos ?: emptyList()) { repo ->
+            RepoCard(repo = repo )
+        }
+    }
+    }
+
+
+
+
+

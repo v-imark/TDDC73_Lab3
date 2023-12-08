@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,11 +27,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column {
-                        RepoCard(name = "Title of the repo")
-                    }
+                   // Column {
+                     //   RepoCard(name = "Title of the repo")
+                     //   FloatingActionButton(
+                      //      onClick = {  },
+                     //   ) {
+                       //     Icon(Icons.Filled.Add, "Floating action button.")
+                      //  }
+                  // }
 
-                   // RepoCardList()
+                    RepoCardList()
                 }
             }
         }
