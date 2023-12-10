@@ -24,7 +24,11 @@ class RepoViewModel: ViewModel() {
         selectedRepo = repo
     }
 
-    fun setLanguages(language: String) {
-        selectedLanguages.plus(language)
+    fun addLanguages(language: String) {
+        selectedLanguages = selectedLanguages.plusElement(language)
+    }
+
+    fun removeLanguages(language: String) {
+        selectedLanguages = selectedLanguages.minusElement(language)
     }
 }
