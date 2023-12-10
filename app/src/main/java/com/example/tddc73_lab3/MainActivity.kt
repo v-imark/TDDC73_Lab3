@@ -16,12 +16,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tddc73_lab3.ui.theme.TDDC73_Lab3Theme
 
 class MainActivity : ComponentActivity() {
-    val viewModel = RepoViewModel()
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TDDC73_Lab3Theme {
+                val viewModel = RepoViewModel()
                 val navController = rememberNavController()
                 viewModel.changeNavController(navController)
                 Scaffold(
