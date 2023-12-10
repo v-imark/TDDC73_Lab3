@@ -7,8 +7,13 @@ query TrendingRepoQuery($query: String!) {
                     owner {
                         login
                     }
+                    licenseInfo {
+                        name
+                    }
+
                     stargazerCount
                     description
+                    createdAt
                     languages(first: 3) {
                         edges {
                             node {
@@ -17,6 +22,7 @@ query TrendingRepoQuery($query: String!) {
                             }
                         }
                         totalCount
+
                     }
                     url
                     forkCount
