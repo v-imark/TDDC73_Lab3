@@ -15,46 +15,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.tddc73_lab3.ui.theme.TDDC73_Lab3Theme
 
 class MainActivity : ComponentActivity() {
+    val viewModel = RepoViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TDDC73_Lab3Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                   // Column {
-                     //   RepoCard(name = "Title of the repo")
-                     //   FloatingActionButton(
-                      //      onClick = {  },
-                     //   ) {
-                       //     Icon(Icons.Filled.Add, "Floating action button.")
-                      //  }
-                  // }
-
-                    RepoCardList()
+                val navController = rememberNavController()
+                viewModel.changeNavController(navController)
+                NavHost(navController = navController, startDestination = "mainpage") {
+                    composable("mainpage")
+                    { MainPage ( viewModel) }
+                    composable("moreInfoPage")
+                    { MoreInfoPage(viewModel) }
                 }
+                // A surface container using the 'background' color from the theme
+
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TDDC73_Lab3Theme {
-        Greeting("Android")
     }
 }
