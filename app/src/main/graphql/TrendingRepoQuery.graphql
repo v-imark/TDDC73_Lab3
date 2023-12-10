@@ -22,7 +22,6 @@ query TrendingRepoQuery($query: String!) {
                             }
                         }
                         totalCount
-
                     }
                     url
                     forkCount
