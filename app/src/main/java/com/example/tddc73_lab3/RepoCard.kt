@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,9 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,30 +29,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.apollographql.apollo3.exception.ApolloException
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-import androidx.navigation.NavController
 
 @Composable
 fun RepoCard(repo: TrendingRepoQuery.OnRepository?, viewModel: RepoViewModel) {
     //val configuration = LocalConfiguration.current
    // val screenHeight = configuration.screenHeightDp.dp
-    Card(colors = CardDefaults.cardColors(
+    Card(
+        colors = CardDefaults.cardColors(
         containerColor = Color.DarkGray,
-
     ),
         modifier = Modifier
             .fillMaxWidth()
-            //.height(screenHeight / 5)
-            .padding(10.dp).clickable { viewModel.setRepo(repo) }
+            .clickable { viewModel.setRepo(repo) }
     )
     {
         Column {
@@ -72,12 +65,14 @@ fun RepoCard(repo: TrendingRepoQuery.OnRepository?, viewModel: RepoViewModel) {
         )
         Text(text = repo?.description ?: "Description was not found.",
             modifier = Modifier
-                .padding(start=16.dp, end=16.dp)
-                .heightIn(min=0.dp, max=75.dp),
+                .padding(start = 16.dp, end = 16.dp)
+                .heightIn(min = 0.dp, max = 75.dp),
             fontSize = 4.5.em,
             color = Color.White,
         )
-        Row (modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp),
             horizontalArrangement = Arrangement.End,)
             {
                 //Display forks
@@ -110,29 +105,43 @@ fun StatBox(icon:Int, stat:Int=0, color: Color= Color.Black) {
 
 @Composable
 fun RepoCardList(viewModel: RepoViewModel) {
-    var name by remember { mutableStateOf("") }
-    var repos by remember { mutableStateOf<List<TrendingRepoQuery.OnRepository?>?>(null) }
+    var repos
+        by remember { mutableStateOf<List<TrendingRepoQuery.OnRepository?>?>(null) }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(viewModel.selectedLanguages, viewModel.selectedTimeframe) {
         try {
-            val response = apolloClient.query(TrendingRepoQuery("language:python stars:>1000")).execute()
+            val response = apolloClient
+                .query(TrendingRepoQuery(viewModel.getQueryString()))
+                .execute()
+
+            println(viewModel.getQueryString())
 
             if (response.hasErrors()) {
                 // Handle errors if needed
             } else {
-                repos = response.data?.search?.edges?.map { edge -> edge?.node?.onRepository  }
+                repos = response.data?.search?.edges?.map { edge ->
+                    edge?.node?.onRepository
+                }
             }
         } catch (e: ApolloException) {
             // Handle ApolloException if needed
         }
     }
-
-    LazyColumn {
-        items(repos ?: emptyList()) { repo ->
-            RepoCard(repo = repo, viewModel)
+    if (repos == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else {
+        LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(10.dp)
+        ) {
+            items(repos ?: emptyList()) { repo ->
+                RepoCard(repo = repo, viewModel)
+            }
         }
     }
-    }
+}
 
 
 
