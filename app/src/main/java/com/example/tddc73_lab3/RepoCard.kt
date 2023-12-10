@@ -113,8 +113,8 @@ fun RepoCardList(viewModel: RepoViewModel) {
         }
     } else {
         LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(10.dp)
         ) {
             items(repos ?: emptyList()) { repo ->
                 RepoCard(repo = repo, viewModel)

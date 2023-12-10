@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,14 +27,13 @@ class MainActivity : ComponentActivity() {
                 viewModel.changeNavController(navController)
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    //color = MaterialTheme.colorScheme.background
                     bottomBar = { FilterFooter(viewModel = viewModel) }
                 ) { innerPadding ->
                     Surface(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        color = MaterialTheme.colorScheme.background
+                        color = Color(0xFF212121)
                     ) {
                         NavHost(navController = navController, startDestination = "mainpage") {
                             composable("mainpage")
