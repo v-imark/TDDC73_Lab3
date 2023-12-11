@@ -14,7 +14,7 @@ query TrendingRepoQuery($query: String!) {
                     stargazerCount
                     description
                     createdAt
-                    languages(first: 3) {
+                    languages(first: 8) {
                         edges {
                             node {
                                 name

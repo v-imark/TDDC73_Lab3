@@ -55,7 +55,10 @@ fun FilterFab(viewModel: RepoViewModel) {
                 DropdownMenuItem(
                     text = { Text(language.uppercase()) },
                     trailingIcon = {
-                        if(viewModel.selectedLanguages.contains(language) ) {
+                        if(
+                            viewModel.selectedLanguages.contains(language)||
+                            (language == "all" && viewModel.selectedLanguages.isEmpty())
+                            ) {
                             Icon(Icons.Filled.Check, contentDescription = "check")
                         }
                     },
@@ -65,7 +68,8 @@ fun FilterFab(viewModel: RepoViewModel) {
                         } else {
                             viewModel.addLanguages(language)
                         }
-                    }
+                    },
+                    enabled=!(language == "all" && viewModel.selectedLanguages.isEmpty())
                 )
                 Divider(modifier = Modifier.fillMaxWidth())
             }

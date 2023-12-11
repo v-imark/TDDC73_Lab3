@@ -12,12 +12,16 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +41,14 @@ fun TimeSelector(viewModel: RepoViewModel) {
                 .menuAnchor()
                 .padding(bottom = 10.dp),
             readOnly = true,
-            trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)}
+            trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.White,
+                unfocusedBorderColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                unfocusedTrailingIconColor = Color.White,
+                focusedTrailingIconColor = Color.White
+            )
         )
         ExposedDropdownMenu(
             expanded = expanded,

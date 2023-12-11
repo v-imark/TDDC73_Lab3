@@ -9,7 +9,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-val Languages = listOf("all", "python", "javascript", "typescript", "c", "c++", "c#")
+val Languages = listOf(
+    "all", "python", "javascript",
+    "typescript", "c", "c++", "c#",
+    "rust", "java", "kotlin", "php",
+    "html", "css", "scss", "shell",
+    "swift", "ruby", "go"
+)
 val Timeframes = listOf("all time", "this year", "last month", "last week")
 
 
@@ -21,7 +27,7 @@ class RepoViewModel: ViewModel() {
     var navController by mutableStateOf<NavController?>(null)
     private set
 
-    var selectedLanguages by mutableStateOf(listOf("all"))
+    var selectedLanguages by mutableStateOf(listOf<String>())
     private set
 
     var selectedTimeframe by mutableStateOf("all time")
@@ -37,7 +43,8 @@ class RepoViewModel: ViewModel() {
     }
 
     fun addLanguages(language: String) {
-        selectedLanguages = selectedLanguages.plusElement(language)
+        selectedLanguages = if (language == "all") listOf()
+        else selectedLanguages.plusElement(language)
     }
 
     fun removeLanguages(language: String) {
